@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'account',
+    'core',
     'rest_framework',
     'rest_framework.authtoken',
     'crispy_forms',
@@ -64,7 +65,7 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': []
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -150,6 +151,9 @@ EMAIL_USE_SSL = json.loads(config('EMAIL_USE_SSL'))
 EMAIL_PORT = int(config('EMAIL_PORT'))
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+FRONT_HOST = config('FRONT_HOST')
+RESET_PASSWORD_LINK = config('RESET_PASSWORD_LINK')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

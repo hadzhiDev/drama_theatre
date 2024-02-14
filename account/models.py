@@ -1,13 +1,11 @@
 import random
+from uuid import uuid4
 
 from django.contrib.auth.models import Permission
 from django.contrib.auth.models import Group
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
-from django_resized import ResizedImageField
-
-from phonenumber_field.modelfields import PhoneNumberField
 
 from utils.models import TimeStampAbstractModel
 
@@ -37,14 +35,19 @@ def get_expire_date():
     return timezone.now() + timezone.timedelta(minutes=15)
 
 
+def random_num():
+    return int(''.join(random.choices('0123456789', k=4)))
+
+
 class UserResetPassword(TimeStampAbstractModel):
     class Meta:
         verbose_name = 'Ключ для сброса пароля'
         verbose_name_plural = 'Ключи для сброса пароля'
         ordering = ('-created_at', '-updated_at')
 
-    user = models.OneToOneField('account.User', on_delete=models.CASCADE, verbose_name='пользователь', )
-    key = models.PositiveIntegerField('ключ', default=random.randint(1001, 9999), editable=False,)
+    user = models.OneToOneField('account.User', on_delete=models.CASCADE, verbose_name='пользователь',
+                                related_name='key')
+    key = models.UUIDField('ключ', default=uuid4, editable=False, unique=True)
     expire_date = models.DateTimeField('срок действия', default=get_expire_date)
 
     def __str__(self):

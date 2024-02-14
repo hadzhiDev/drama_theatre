@@ -64,7 +64,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name',)
+        fields = ('id', 'email', 'first_name', 'password',)
 
     def validate(self, attrs):
         for item in attrs.items():
@@ -87,5 +87,5 @@ class SendResetPasswordKeySerializer(serializers.Serializer):
 
 class ResetPasswordSerializer(serializers.Serializer):
 
-    key = serializers.IntegerField()
+    key = serializers.UUIDField()
     new_password = serializers.CharField(validators=[validate_password])

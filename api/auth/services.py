@@ -18,19 +18,19 @@ class ResetPasswordManager:
             self.payload.delete()
             self.payload = UserResetPassword.objects.get_or_create(user=self.user)[0]
 
-    # def _make_link(self):
-    #     key = self.payload.key
-    #     queries = urlencode({'key': key})
-    #     front_host = settings.FRONT_HOST
-    #     reset_password_link = settings.RESET_PASSWORD_LINK
-    #     return f'{front_host}{reset_password_link}?{queries}'
+    def _make_link(self):
+        key = self.payload.key
+        queries = urlencode({'key': key})
+        front_host = settings.FRONT_HOST
+        reset_password_link = settings.RESET_PASSWORD_LINK
+        return f"{'http://127.0.0.1:8000/api/v1/auth/reset-password/'}?{queries}"
 
     def send_key(self):
-        # link = self._make_link()
+        link = self._make_link()
         # print(link)
         key = self.payload.key
         subject, to, from_email = 'Reset Password | DramaTheatre.kg', self.user.email, settings.EMAIL_HOST_USER
-        html_message = f'this is your code to reset password: {key}'
+        html_message = f'this is a link {link} to reset password'
         plain_message = strip_tags(html_message)
 
         send_mail(
@@ -41,7 +41,7 @@ class ResetPasswordManager:
             html_message=plain_message
         )
 
-    def reset_password(self, key: int, new_password: str) -> bool:
+    def reset_password(self, key: str, new_password: str) -> bool:
         real_key = self.payload.key
         user = self.user
         if real_key == key:
