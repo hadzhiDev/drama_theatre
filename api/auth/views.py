@@ -98,9 +98,11 @@ class SendResetPasswordKeyApiView(GenericAPIView):
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email', None)
         user = get_object_or_404(User, email=email)
-        manager = ResetPasswordManager(user)
-        manager.send_key()
-        return Response({'detail': 'Ключ успещно отправлен'})
+        if user:
+            manager = ResetPasswordManager(user)
+            manager.send_key()
+            return Response({'detail': 'Ключ успещно отправлен'})
+        return Response({'detail': 'пользователь с таким адресом электронной почты не существует'})
 
 
 class ResetPasswordApiView(GenericAPIView):

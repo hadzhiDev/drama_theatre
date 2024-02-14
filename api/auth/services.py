@@ -23,14 +23,14 @@ class ResetPasswordManager:
         queries = urlencode({'key': key})
         front_host = settings.FRONT_HOST
         reset_password_link = settings.RESET_PASSWORD_LINK
-        return f"{'http://127.0.0.1:8000/api/v1/auth/reset-password/'}?{queries}"
+        return f"{front_host}{reset_password_link}?{queries}"
 
     def send_key(self):
         link = self._make_link()
         # print(link)
-        key = self.payload.key
+        # key = self.payload.key
         subject, to, from_email = 'Reset Password | DramaTheatre.kg', self.user.email, settings.EMAIL_HOST_USER
-        html_message = f'this is a link {link} to reset password'
+        html_message = f'this is a <a href="{link}">link</a> to reset password'
         plain_message = strip_tags(html_message)
 
         send_mail(
