@@ -7,6 +7,8 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 
 router.register('news', views.NewsViewSet)
+router.register('gallery', views.PhotoViewSet)
+router.register('photo-category', views.PhotoCategoryViewSet)
 
 urlpatterns = [
     path('auth/', include('api.auth.urls')),
