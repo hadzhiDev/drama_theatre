@@ -1,6 +1,6 @@
 from django.urls import path, include
 from api import views
-# from .yasg import urlpatterns as url_doc
+from .yasg import urlpatterns as url_doc
 
 from rest_framework.routers import DefaultRouter
 
@@ -15,3 +15,5 @@ urlpatterns = [
 
     path('', include(router.urls))
 ]
+
+urlpatterns += url_doc

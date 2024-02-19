@@ -47,6 +47,10 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'crispy_forms',
     'crispy_bootstrap4',
+    # 'allauth',
+    # 'allauth.account',
+    # 'allauth',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [

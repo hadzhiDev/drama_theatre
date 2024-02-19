@@ -1,6 +1,8 @@
 from django.db import models
 
 from utils.models import TimeStampAbstractModel
+# from allauth.account import models
+# models
 
 
 class News(TimeStampAbstractModel):
@@ -39,3 +41,14 @@ class PhotoCategory(TimeStampAbstractModel):
 
     def __str__(self):
         return self.name
+
+
+# class PeopleFirst(TimeStampAbstractModel):
+#     class Meta:
+#         verbose_name = 'фото категория'
+#         verbose_name_plural = 'фото категории'
+#
+#     name = models.CharField(max_length=150, verbose_name='название',)
+#
+#     def __str__(self):
+#         return self.name
