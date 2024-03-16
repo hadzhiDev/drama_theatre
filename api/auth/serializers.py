@@ -42,7 +42,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
             if not item[1]:
                 raise ValidationError({
                     item[0]: [
-                        f'{item[0]} could not be empty'
+                        f'{item[0]} не может быть пустым'
                     ]
                 })
         return attrs
@@ -71,7 +71,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             if not item[1]:
                 raise ValidationError({
                     item[0]: [
-                        f'{item[0]} could not be empty'
+                        f'{item[0]} не может быть пустым'
                     ]
                 })
         return attrs

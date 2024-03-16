@@ -30,7 +30,7 @@ class LoginGenericAPIView(GenericAPIView):
                 **user_serializer.data,
                 'token_key': token.key
             })
-        return Response({'massage': 'The user is not found or the password is invalid'},
+        return Response({'massage': 'Пользователь не найден или неверный пароль'},
                         status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -77,13 +77,13 @@ class ChangePasswordApiView(UpdateAPIView):
                 response = {
                     'status': 'success',
                     'code': status.HTTP_200_OK,
-                    'message': 'Password updated successfully',
+                    'message': 'Пароль успешно обновлен',
                     'data': []
                 }
 
                 return Response(response)
             else:
-                return Response({"old_password": ['Wrong password']}, status.HTTP_400_BAD_REQUEST)
+                return Response({"old_password": ['Неверный пароль']}, status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 

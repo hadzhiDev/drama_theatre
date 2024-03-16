@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.mail import send_mail
+from django.utils.html import format_html
 from django.utils.html import strip_tags
 # from django_rest_passwordreset.signals import reset_password_token_created
 from rest_framework.generics import get_object_or_404
@@ -29,8 +30,10 @@ class ResetPasswordManager:
         link = self._make_link()
         # print(link)
         # key = self.payload.key
-        subject, to, from_email = 'Reset Password | DramaTheatre.kg', self.user.email, settings.EMAIL_HOST_USER
-        html_message = f'this is a <a href="{link}">link</a> to reset password'
+        subject, to, from_email = 'Сброс пароля | DramaTheatre.kg', self.user.email, settings.EMAIL_HOST_USER
+        # html_message = format_html(f'<a href="{link}">это ссылка для сброса пароля</a>')
+        # plain_message = strip_tags(html_message)
+        html_message = f'это ссылка для сброса пароля: {link}'
         plain_message = strip_tags(html_message)
 
         send_mail(
