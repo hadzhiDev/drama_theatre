@@ -8,7 +8,8 @@ router = DefaultRouter()
 
 router.register('news', views.NewsViewSet)
 router.register('gallery', views.PhotoViewSet)
-router.register('photo-category', views.PhotoCategoryViewSet)
+router.register('photo-categories', views.PhotoCategoryViewSet)
+router.register('events', views.EventViewSet)
 
 urlpatterns = [
     path('auth/', include('api.auth.urls')),

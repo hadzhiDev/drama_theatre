@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from django.conf import settings
 
-from core.models import News, Photo, PhotoCategory
+from core.models import News, Photo, PhotoCategory, Event
 
 
 class NewsSerializer(serializers.ModelSerializer):
@@ -23,4 +23,9 @@ class PhotoCategorySerializer(serializers.ModelSerializer):
         model = PhotoCategory
         fields = '__all__'
 
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = '__all__'
 
