@@ -1,6 +1,8 @@
 # from drf_writable_nested import WritableNestedModelSerializer
 from rest_framework import serializers
 
+from django.conf import settings
+
 from core.models import News, Photo, PhotoCategory
 
 
@@ -20,6 +22,5 @@ class PhotoCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = PhotoCategory
         fields = '__all__'
-
 
 

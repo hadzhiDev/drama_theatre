@@ -1,4 +1,6 @@
 from django.contrib.auth import authenticate, login
+from django.shortcuts import render
+
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.generics import GenericAPIView, get_object_or_404, UpdateAPIView
@@ -6,12 +8,34 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
+from rest_registration.api.serializers import DefaultUserProfileSerializer
+
 from account.models import User, UserResetPassword
 
 # from api.auth.mixins import UltraModelViewSet
 from api.auth.serializers import LoginSerializer, UserSerializer, RegisterUserSerializer, ProfileSerializer, \
-    ChangePasswordSerializer, SendResetPasswordKeySerializer, ResetPasswordSerializer
+    ChangePasswordSerializer, SendResetPasswordKeySerializer, ResetPasswordSerializer, GoogleAuth
 from api.auth.services import ResetPasswordManager
+
+
+def get_google_code(request):
+    return render(request, 'index.html')
+
+
+class GoogleAuthAPIView(GenericAPIView):
+    serializer_class = GoogleAuth
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save()
+        token = Token.objects.get_or_create(user=user)[0]
+        user_serializer = DefaultUserProfileSerializer(instance=user, context={'request': request})
+        return Response({
+            **user_serializer.data,
+            'token': token.key,
+        })
 
 
 class LoginGenericAPIView(GenericAPIView):

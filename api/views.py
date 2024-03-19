@@ -1,4 +1,5 @@
 # rom django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet
 
@@ -29,4 +30,5 @@ class PhotoCategoryViewSet(ModelViewSet):
     serializer_class = PhotoCategorySerializer
     lookup_field = 'id'
     search_fields = ['name', 'created_at',]
+
 
