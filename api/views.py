@@ -1,14 +1,14 @@
 # rom django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from api.paginations import SimpleResultPagination
 from api.serializers import NewsSerializer, PhotoSerializer, PhotoCategorySerializer, EventSerializer
 from core.models import *
 
 
-class NewsViewSet(ModelViewSet):
+class NewsViewSet(ReadOnlyModelViewSet):
     queryset = News.objects.all()
     pagination_class = SimpleResultPagination
     serializer_class = NewsSerializer
@@ -16,7 +16,7 @@ class NewsViewSet(ModelViewSet):
     search_fields = ['title', 'description', 'content']
 
 
-class PhotoViewSet(ModelViewSet):
+class PhotoViewSet(ReadOnlyModelViewSet):
     queryset = Photo.objects.all()
     pagination_class = SimpleResultPagination
     serializer_class = PhotoSerializer
@@ -24,7 +24,7 @@ class PhotoViewSet(ModelViewSet):
     search_fields = ['photo_cat', 'created_at',]
 
 
-class PhotoCategoryViewSet(ModelViewSet):
+class PhotoCategoryViewSet(ReadOnlyModelViewSet):
     queryset = PhotoCategory.objects.all()
     pagination_class = SimpleResultPagination
     serializer_class = PhotoCategorySerializer
@@ -32,7 +32,7 @@ class PhotoCategoryViewSet(ModelViewSet):
     search_fields = ['name', 'created_at',]
 
 
-class EventViewSet(ModelViewSet):
+class EventViewSet(ReadOnlyModelViewSet):
     queryset = Event.objects.all()
     pagination_class = SimpleResultPagination
     serializer_class = EventSerializer

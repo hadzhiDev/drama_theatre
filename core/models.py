@@ -27,7 +27,6 @@ class Photo(TimeStampAbstractModel):
         verbose_name_plural = 'фотографии'
         ordering = ('-created_at',)
 
-
     image = models.ImageField(upload_to='galleryImages/', verbose_name='фотография')
     photo_cat = models.ForeignKey('core.PhotoCategory', on_delete=models.CASCADE, verbose_name='категории фотографии')
 
@@ -53,7 +52,7 @@ class Event(TimeStampAbstractModel):
         ordering = ('-created_at',)
 
     name = models.CharField(max_length=200, verbose_name='название',)
-    description = models.CharField(max_length=400, verbose_name='описание',)
+    content = models.CharField(max_length=400, verbose_name='контент',)
     image = models.ImageField(upload_to='eventImages/', verbose_name='фотография')
 
     def __str__(self):
@@ -81,7 +80,7 @@ class Repertoire(TimeStampAbstractModel):
     name = models.CharField(max_length=200, verbose_name='название',)
     description = models.CharField(max_length=400, verbose_name='описание',)
     genres = models.ManyToManyField('core.Genre', verbose_name='жанры', related_name='кepertoire')
-    
+
 
 
 
