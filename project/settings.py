@@ -51,6 +51,8 @@ INSTALLED_APPS = [
     # 'allauth.account',
     # 'allauth',
     'drf_yasg',
+    'nested_admin',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

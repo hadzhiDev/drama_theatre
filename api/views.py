@@ -1,10 +1,13 @@
-# rom django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.generics import GenericAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
+from rest_framework import filters
 
+from api.filters import RepertoireFilter
 from api.paginations import SimpleResultPagination
-from api.serializers import NewsSerializer, PhotoSerializer, PhotoCategorySerializer, EventSerializer
+from api.serializers import (NewsSerializer, PhotoSerializer, PhotoCategorySerializer, EventSerializer,
+                             HallSerializer, RepertoireSerializer)
 from core.models import *
 
 
@@ -39,4 +42,22 @@ class EventViewSet(ReadOnlyModelViewSet):
     lookup_field = 'id'
     search_fields = ['name', 'created_at',]
 
+
+class HallViewSet(ReadOnlyModelViewSet):
+    queryset = Hall.objects.all()
+    pagination_class = SimpleResultPagination
+    serializer_class = HallSerializer
+    lookup_field = 'id'
+    search_fields = ['name', 'created_at',]
+
+
+class RepertoireViewSet(ReadOnlyModelViewSet):
+    queryset = Repertoire.objects.all()
+    pagination_class = SimpleResultPagination
+    serializer_class = RepertoireSerializer
+    lookup_field = 'id'
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    search_fields = ['name', 'created_at', 'date']
+    filterset_class = RepertoireFilter
+    ordering_fields = ['pg',]
 

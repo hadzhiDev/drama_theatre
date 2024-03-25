@@ -10,6 +10,8 @@ router.register('news', views.NewsViewSet)
 router.register('gallery', views.PhotoViewSet)
 router.register('photo-categories', views.PhotoCategoryViewSet)
 router.register('events', views.EventViewSet)
+router.register('halls', views.HallViewSet)
+router.register('repertoires', views.RepertoireViewSet)
 
 urlpatterns = [
     path('auth/', include('api.auth.urls')),
