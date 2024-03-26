@@ -2,8 +2,6 @@ from django.db import models
 
 from utils.models import TimeStampAbstractModel
 
-from phonenumber_field.modelfields import PhoneNumberField
-
 
 class News(TimeStampAbstractModel):
     class Meta:
@@ -94,6 +92,17 @@ class Actor(TimeStampAbstractModel):
 
 
 class Repertoire(TimeStampAbstractModel):
+    WAITING = 'waiting'
+    CANCELED = 'canceled'
+    COMPLETED = 'completed'
+
+    STATUS = (
+        (WAITING, 'В ожидание'),
+        (CANCELED, 'Отменено'),
+        (COMPLETED, 'Завершенный')
+
+    )
+
     class Meta:
         verbose_name = 'репертуар'
         verbose_name_plural = 'репертуары'
@@ -109,10 +118,7 @@ class Repertoire(TimeStampAbstractModel):
     actors = models.ManyToManyField('core.Actor', verbose_name='актеры', related_name='repertoire')
     performance_hall = models.ForeignKey('core.Hall', models.PROTECT, verbose_name='концертный зал')
     image = models.ImageField(upload_to='repertoireImages/', verbose_name='фотография')
-    # is_finished = models.BooleanField(default=False, verbose_name='закончен?')
-
-    # def check_date(self):
-
+    status = models.CharField('статус', choices=STATUS, default=WAITING, max_length=50)
 
     def __str__(self):
         return f'{self.name} - {self.duration}'
@@ -186,8 +192,11 @@ class Ticket(models.Model):
     is_sold = models.BooleanField(default=False, verbose_name='продано?')
     seat_number = models.IntegerField(verbose_name='номер места')
     row_number = models.IntegerField(verbose_name='номер ряда')
-    ticket_type = models.ForeignKey('core.TicketType', on_delete=models.CASCADE, related_name='tickets',
-                                    verbose_name='тип билета')
+    type = models.ForeignKey('core.TicketType', on_delete=models.CASCADE, related_name='tickets',
+                             verbose_name='тип билета')
+
+    def __str__(self):
+        return f'{self.type.seance} - {self.type.price}'
 
 
 class Hall(TimeStampAbstractModel):
@@ -238,24 +247,5 @@ class Seat(models.Model):
     def __str__(self):
         return f'{self.row_number} - {self.seat_number}'
 
-
-class Cart(TimeStampAbstractModel):
-    MAN = 'man'
-    WOMEN = 'women'
-
-    SEX = (
-        (MAN, 'Мужчина'),
-        (WOMEN, 'Женщина')
-    )
-
-    class Meta:
-        verbose_name = 'корзина'
-        verbose_name_plural = 'корзины'
-
-    name = models.CharField('имя и фамилия', max_length=140)
-    email = models.EmailField('электронная почта')
-    phone = PhoneNumberField('номер телефона')
-    sex = models.CharField(max_length=100, choices=SEX, verbose_name='пол')
-    date_of_birth = models.DateField(verbose_name='дата рождения')
 
 

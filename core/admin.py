@@ -73,10 +73,10 @@ class ActorAdmin(admin.ModelAdmin):
 
 @admin.register(Ticket)
 class TicketAdmin(admin.ModelAdmin):
-    list_display = ('id', 'repertoire_name', 'ticket_type', 'row_number', 'seat_number', 'is_sold')
+    list_display = ('id', 'repertoire_name', 'type', 'row_number', 'seat_number', 'is_sold')
     list_display_links = ('id', 'repertoire_name')
     search_fields = ('repertoire_name', 'row_number')
-    readonly_fields = ('repertoire_name', 'row_number', 'seat_number', 'ticket_type')
+    readonly_fields = ('repertoire_name', 'row_number', 'seat_number', 'type')
 
 
 class TicketTypeStackedInline(NestedTabularInline):
