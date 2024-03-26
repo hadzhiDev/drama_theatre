@@ -29,11 +29,7 @@ class Cart(TimeStampAbstractModel):
 
     @property
     def total_price(self):
-        tot = 0
-        for ticket in self.tickets.all():
-            tot += ticket.price
-        # print(sum(ticket.price for ticket in self.tickets.all()))
-        return tot
+        return sum(ticket.price for ticket in self.tickets.all())
 
 
 class TicketForSale(models.Model):

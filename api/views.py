@@ -4,11 +4,14 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework import filters
 
+from api.mixins import UltraModelViewSet
 from api.filters import RepertoireFilter
 from api.paginations import SimpleResultPagination
 from api.serializers import (NewsSerializer, PhotoSerializer, PhotoCategorySerializer, EventSerializer,
-                             HallSerializer, RepertoireSerializer)
+                             HallSerializer, RepertoireSerializer, CartSerializer, CartTicketSerializer,
+                             CreateCartSerializer)
 from core.models import *
+from cart.models import *
 
 
 class NewsViewSet(ReadOnlyModelViewSet):
@@ -60,4 +63,44 @@ class RepertoireViewSet(ReadOnlyModelViewSet):
     search_fields = ['name', 'created_at', 'date']
     filterset_class = RepertoireFilter
     ordering_fields = ['pg',]
+
+
+class CartViewSet(UltraModelViewSet):
+    queryset = Cart.objects.all()
+    serializer_classes = {
+        'list': CartSerializer,
+        'retrieve': CartSerializer,
+        'update': CartSerializer,
+        'create': CreateCartSerializer,
+    }
+    pagination_class = SimpleResultPagination
+    lookup_field = 'id'
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    ordering_fields = ['created_at']
+    search_fields = ['name', 'email', 'phone', 'date_of_birth']
+    filterset_fields = ['tickets__ticket']
+    permission_classes_by_action = {
+        'list': (AllowAny,),
+        'retrieve': (AllowAny,),
+        'create': (AllowAny,),
+        'update': (IsAuthenticated,),
+        'destroy': (IsAuthenticated,),
+    }
+
+
+class CartTicketViewSet(ModelViewSet):
+    queryset = TicketForSale.objects.all()
+    serializer_class = CartTicketSerializer
+    pagination_class = SimpleResultPagination
+    lookup_field = 'id'
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    ordering_fields = ['price',]
+    filterset_fields = ['ticket', 'cart']
+    permission_classes_by_action = {
+        'list': (AllowAny,),
+        'retrieve': (AllowAny,),
+        'create': (AllowAny,),
+        'update': (IsAuthenticated,),
+        'destroy': (IsAuthenticated,),
+    }
 

@@ -12,6 +12,8 @@ router.register('photo-categories', views.PhotoCategoryViewSet)
 router.register('events', views.EventViewSet)
 router.register('halls', views.HallViewSet)
 router.register('repertoires', views.RepertoireViewSet)
+router.register('carts', views.CartViewSet)
+router.register('cart-tickets', views.CartTicketViewSet)
 
 urlpatterns = [
     path('auth/', include('api.auth.urls')),

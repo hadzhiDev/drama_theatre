@@ -4,6 +4,7 @@ from rest_framework import serializers
 from django.conf import settings
 
 from core.models import *
+from cart.models import *
 
 
 class NewsSerializer(serializers.ModelSerializer):
@@ -113,3 +114,64 @@ class HallSerializer(serializers.ModelSerializer):
         model = Hall
         fields = '__all__'
 
+
+class TicketForSaleSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = TicketForSale
+        fields = ('ticket',)
+
+
+class CreateCartSerializer(serializers.ModelSerializer):
+    tickets = TicketForSaleSerializers(many=True)
+
+    class Meta:
+        model = Cart
+        fields = '__all__'
+
+    def validate(self, attrs):
+        if len(attrs['name']) < 3:
+            raise serializers.ValidationError({
+                'name': [
+                    'Name must be at least 3 characters'
+                ]
+            })
+        return attrs
+
+    def create(self, validated_data):
+        tickets = validated_data.pop('tickets', [])
+        cart = Cart.objects.create(**validated_data)
+        for selling_ticket in tickets:
+            ticket = Ticket.objects.get(id=selling_ticket['ticket'].id)
+            ticket.is_sold = True
+            ticket.save()
+            TicketForSale.objects.create(**selling_ticket, cart=cart)
+        return cart
+
+
+class TicketForReadCartSerializer(serializers.ModelSerializer):
+    ticket = TicketSerializer(read_only=True)
+
+    class Meta:
+        model = TicketForSale
+        fields = ('ticket', 'price', )
+
+
+class CartSerializer(serializers.ModelSerializer):
+    tickets = TicketForReadCartSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Cart
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        total_price = sum(ticket.price for ticket in instance.tickets.all())
+        ret.setdefault('total_price', total_price)
+        return ret
+
+
+class CartTicketSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TicketForSale
+        fields = '__all__'
