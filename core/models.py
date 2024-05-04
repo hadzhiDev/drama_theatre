@@ -100,7 +100,6 @@ class Repertoire(TimeStampAbstractModel):
         (WAITING, 'В ожидание'),
         (CANCELED, 'Отменено'),
         (COMPLETED, 'Завершенный')
-
     )
 
     class Meta:
@@ -109,7 +108,7 @@ class Repertoire(TimeStampAbstractModel):
         ordering = ('-created_at',)
 
     name = models.CharField(max_length=200, verbose_name='название',)
-    description = models.CharField(max_length=400, verbose_name='описание',)
+    description = models.CharField(max_length=300, verbose_name='описание',)
     genres = models.ManyToManyField('core.Genre', verbose_name='жанры', related_name='кepertoire')
     duration = models.CharField(max_length=200, verbose_name='длительность',)
     pg = models.CharField(max_length=100, verbose_name='рекомендуется родительское руководство:')
@@ -147,7 +146,7 @@ class PerformanceSeance(TimeStampAbstractModel):
     time = models.TimeField(verbose_name='время начала')
     date = models.DateField(verbose_name='дата')
     repertoire = models.ForeignKey('core.Repertoire', on_delete=models.CASCADE, related_name='seances',
-                            verbose_name='репертуар')
+                                   verbose_name='репертуар')
 
     def __str__(self):
         return f'{self.time} - {self.date}'
@@ -171,7 +170,7 @@ class TicketType(models.Model):
             seats = Seat.objects.filter(row_id=row.id)
             for seat in seats:
                 ticket = Ticket.objects.create(seat_number=seat.seat_number, row_number=row.number,
-                                               ticket_type=self, repertoire_name=self.seance.repertoire.name)
+                                               type=self, repertoire_name=self.seance.repertoire.name)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
