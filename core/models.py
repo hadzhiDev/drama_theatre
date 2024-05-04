@@ -108,7 +108,7 @@ class Repertoire(TimeStampAbstractModel):
         ordering = ('-created_at',)
 
     name = models.CharField(max_length=200, verbose_name='название',)
-    description = models.CharField(max_length=300, verbose_name='описание',)
+    description = models.CharField(max_length=250, verbose_name='описание',)
     genres = models.ManyToManyField('core.Genre', verbose_name='жанры', related_name='кepertoire')
     duration = models.CharField(max_length=200, verbose_name='длительность',)
     pg = models.CharField(max_length=100, verbose_name='рекомендуется родительское руководство:')
