@@ -110,18 +110,24 @@ class RepertoireAdmin(NestedModelAdmin):
         return mark_safe(f'<img src="{item.image.url}" width="100px">')
 
 
-class HallRowTabularInline(admin.TabularInline):
+class EmptySpaceStackedInline(NestedTabularInline):
+    model = EmptySpace
+    extra = 2
+
+
+class HallRowStackedInline(NestedTabularInline):
     model = HallRow
     extra = 1
+    inlines = [EmptySpaceStackedInline, ]
 
 
 @admin.register(Hall)
-class HallAdmin(admin.ModelAdmin):
+class HallAdmin(NestedModelAdmin):
     list_display = ('id', 'name', 'created_at', 'get_image')
     list_display_links = ('id', 'name')
     search_fields = ('id', 'name', 'created_at')
     readonly_fields = ('created_at', 'updated_at')
-    inlines = [HallRowTabularInline]
+    inlines = [HallRowStackedInline, ]
 
     @admin.display(description='фотография')
     def get_image(self, item):

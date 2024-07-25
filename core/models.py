@@ -234,12 +234,27 @@ class HallRow(TimeStampAbstractModel):
         return f'{self.hall_id.name}'
 
 
+class EmptySpace(TimeStampAbstractModel):
+    class Meta:
+        verbose_name = 'пустое место'
+        verbose_name_plural = 'пустые места'
+
+    from_seat = models.IntegerField(verbose_name='от')
+    empty_spots = models.IntegerField(verbose_name='пустые точки')
+    to_seat = models.IntegerField(verbose_name='до')
+    row = models.ForeignKey('core.HallRow', on_delete=models.CASCADE, related_name='empty_spaces',
+                            verbose_name='ряд')
+
+    def __str__(self):
+        return f'{self.row}'
+
+
 class Seat(models.Model):
     class Meta:
         verbose_name = 'место'
         verbose_name_plural = 'места'
 
-    row_id = models.ForeignKey('core.HallRow', models.CASCADE, 'seats', verbose_name='ряд')
+    row_id = models.ForeignKey('core.HallRow', on_delete=models.CASCADE, related_name='seats', verbose_name='ряд')
     seat_number = models.IntegerField(verbose_name='номер места')
     row_number = models.IntegerField(verbose_name='номер ряда', default=3)
 

@@ -99,8 +99,15 @@ class SeatSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class EmptySpaceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmptySpace
+        fields = '__all__'
+
+
 class HallRowSerializer(serializers.ModelSerializer):
     seats = SeatSerializer(many=True, read_only=True)
+    empty_spaces = EmptySpaceSerializer(many=True, read_only=True)
 
     class Meta:
         model = HallRow
