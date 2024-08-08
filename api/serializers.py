@@ -115,7 +115,7 @@ class HallRowSerializer(serializers.ModelSerializer):
 
 
 class HallSerializer(serializers.ModelSerializer):
-    hall_rows = HallRowSerializer(many=True, read_only=True)
+    rows = HallRowSerializer(many=True, read_only=True)
 
     class Meta:
         model = Hall

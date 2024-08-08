@@ -8,6 +8,7 @@ from google.oauth2 import id_token
 from google.auth.transport import requests
 
 from account.models import User
+from api.serializers import CartSerializer
 
 
 class GoogleAuth(serializers.Serializer):
@@ -84,10 +85,17 @@ class ChangePasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True, validators=[validate_password])
 
 
+# class CartForUserHistorySerializer(serializers.ModelSerializer):
+#     model = Cart
+#     fields = ()
+
+
 class ProfileSerializer(serializers.ModelSerializer):
+    carts = CartSerializer(many=True, read_only=True)
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'password',)
+        fields = ('id', 'email', 'first_name', 'password', 'carts')
 
     def validate(self, attrs):
         for item in attrs.items():

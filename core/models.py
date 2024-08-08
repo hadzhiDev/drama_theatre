@@ -217,21 +217,27 @@ class HallRow(TimeStampAbstractModel):
         verbose_name_plural = 'ряды'
         ordering = ('-created_at',)
 
-    hall_id = models.ForeignKey('core.Hall', models.CASCADE, 'hall_rows', verbose_name='зал')
+    hall = models.ForeignKey('core.Hall', on_delete=models.CASCADE, related_name='rows', verbose_name='зал')
     length = models.IntegerField(verbose_name='длина ряда')
     number = models.IntegerField(verbose_name='номер ряда')
 
     def create_seats(self):
+        existing_seat_numbers = self.seats.values_list('seat_number', flat=True)
+
+        self.seats.filter(seat_number__gt=self.length).delete()
+
         for i in range(1, self.length + 1):
-            Seat.objects.create(row_id=self, seat_number=i, row_number=self.number)
+            if i not in existing_seat_numbers:
+                Seat.objects.create(row=self, seat_number=i, row_number=self.number)
+        print(existing_seat_numbers.last(), self.length + 1)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        # After saving the HallScheme, create seats based on rows length
+        # After saving the HallRow, create seats based on row length
         self.create_seats()
 
     def __str__(self):
-        return f'{self.hall_id.name}'
+        return f'{self.hall.name} - Row {self.number}'
 
 
 class EmptySpace(TimeStampAbstractModel):
@@ -242,24 +248,24 @@ class EmptySpace(TimeStampAbstractModel):
     from_seat = models.IntegerField(verbose_name='от')
     empty_spots = models.IntegerField(verbose_name='пустые точки')
     to_seat = models.IntegerField(verbose_name='до')
-    row = models.ForeignKey('core.HallRow', on_delete=models.CASCADE, related_name='empty_spaces',
-                            verbose_name='ряд')
+    row = models.ForeignKey(HallRow, on_delete=models.CASCADE, related_name='empty_spaces', verbose_name='ряд')
 
     def __str__(self):
-        return f'{self.row}'
+        return f'Row {self.row.number} - {self.from_seat} to {self.to_seat}'
 
 
 class Seat(models.Model):
     class Meta:
         verbose_name = 'место'
         verbose_name_plural = 'места'
+        unique_together = (('row', 'seat_number'),)  # Ensure unique seat numbers within each row
 
-    row_id = models.ForeignKey('core.HallRow', on_delete=models.CASCADE, related_name='seats', verbose_name='ряд')
+    row = models.ForeignKey('HallRow', on_delete=models.CASCADE, related_name='seats', verbose_name='ряд')
     seat_number = models.IntegerField(verbose_name='номер места')
-    row_number = models.IntegerField(verbose_name='номер ряда', default=3)
+    row_number = models.IntegerField(verbose_name='номер ряда')
 
     def __str__(self):
-        return f'{self.row_number} - {self.seat_number}'
+        return f'Row {self.row_number} - Seat {self.seat_number}'
 
 
 

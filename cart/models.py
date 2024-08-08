@@ -23,6 +23,8 @@ class Cart(TimeStampAbstractModel):
     phone = PhoneNumberField('номер телефона')
     sex = models.CharField(max_length=100, choices=SEX, verbose_name='пол')
     date_of_birth = models.DateField(verbose_name='дата рождения')
+    user = models.ForeignKey('account.User', models.CASCADE, 'carts', verbose_name='пользователь',
+                             null=True, blank=True)
 
     def __str__(self):
         return self.name
