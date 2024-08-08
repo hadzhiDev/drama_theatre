@@ -115,7 +115,8 @@ class Repertoire(TimeStampAbstractModel):
     director = models.ForeignKey('core.Director', on_delete=models.PROTECT, verbose_name='режиссер')
     scriptwriter = models.CharField(max_length=200, verbose_name='автор сценарий',)
     actors = models.ManyToManyField('core.Actor', verbose_name='актеры', related_name='repertoire')
-    performance_hall = models.ForeignKey('core.Hall', models.PROTECT, verbose_name='концертный зал')
+    performance_hall = models.ForeignKey('core.Hall', models.SET_NULL, verbose_name='концертный зал',
+                                         null=True, blank=True)
     image = models.ImageField(upload_to='repertoireImages/', verbose_name='фотография')
     status = models.CharField('статус', choices=STATUS, default=WAITING, max_length=50)
 
