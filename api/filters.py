@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 
-from core.models import Repertoire
+from core.models import Repertoire,PerformanceSeance
 
 
 class RepertoireFilter(filters.FilterSet):
@@ -8,4 +8,13 @@ class RepertoireFilter(filters.FilterSet):
 
     class Meta:
         model = Repertoire
-        fields = ['genres', 'director', ]
+        fields = ['genres', 'director']
+
+
+class PerformanceSeanceFilter(filters.FilterSet):
+    date = filters.DateFilter()
+    time = filters.TimeFilter()
+
+    class Meta:
+        model = PerformanceSeance
+        fields = ['date', 'time']

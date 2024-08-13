@@ -5,11 +5,11 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 from rest_framework import filters
 
 from api.mixins import UltraModelViewSet
-from api.filters import RepertoireFilter
+from api.filters import RepertoireFilter, PerformanceSeanceFilter
 from api.paginations import SimpleResultPagination
 from api.serializers import (NewsSerializer, PhotoSerializer, PhotoCategorySerializer, EventSerializer,
                              HallSerializer, RepertoireSerializer, CartSerializer, CartTicketSerializer,
-                             CreateCartSerializer)
+                             CreateCartSerializer, PerformanceSeanceSerializer)
 from core.models import *
 from cart.models import *
 
@@ -52,6 +52,16 @@ class HallViewSet(ReadOnlyModelViewSet):
     serializer_class = HallSerializer
     lookup_field = 'id'
     search_fields = ['name', 'created_at',]
+
+
+class PerformanceSeanceViewSet(ReadOnlyModelViewSet):
+    queryset = PerformanceSeance.objects.all()
+    pagination_class = SimpleResultPagination
+    serializer_class = PerformanceSeanceSerializer
+    lookup_field = 'id'
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
+    search_fields = ['id', 'created_at', 'date', 'time']
+    filterset_class = PerformanceSeanceFilter
 
 
 class RepertoireViewSet(ReadOnlyModelViewSet):
