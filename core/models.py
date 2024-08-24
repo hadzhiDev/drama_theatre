@@ -58,7 +58,6 @@ class Event(TimeStampAbstractModel):
 
 
 class Genre(TimeStampAbstractModel):
-
     class Meta:
         verbose_name = 'Жанр'
         verbose_name_plural = 'Жанры'
@@ -194,6 +193,10 @@ class Ticket(models.Model):
     row_number = models.IntegerField(verbose_name='номер ряда')
     type = models.ForeignKey('core.TicketType', on_delete=models.CASCADE, related_name='tickets',
                              verbose_name='тип билета')
+
+    @property
+    def price(self):
+        return self.type.price
 
     def __str__(self):
         return f'{self.type.seance} - {self.type.price}'

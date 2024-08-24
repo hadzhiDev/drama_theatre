@@ -54,7 +54,15 @@ class ActorSerializer(serializers.ModelSerializer):
 class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
-        fields = '__all__'
+        fields = (
+            'id',
+            'repertoire_name',
+            'is_sold',
+            'seat_number',
+            'row_number',
+            'type',
+            'price',
+        )
 
 
 class TicketTypeSerializer(serializers.ModelSerializer):
