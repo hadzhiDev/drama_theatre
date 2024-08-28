@@ -70,7 +70,7 @@ class TicketTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TicketType
-        fields = ('id', 'price', 'from_row', 'to_row', 'seance', 'tickets')
+        fields = ('id', 'price', 'from_row', 'to_row', 'seance', 'hex_code', 'color', 'tickets')
 
 
 class PerformanceSeanceSerializer(serializers.ModelSerializer):

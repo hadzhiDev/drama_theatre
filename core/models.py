@@ -162,6 +162,8 @@ class TicketType(models.Model):
     price = models.IntegerField(verbose_name='цена')
     from_row = models.IntegerField(verbose_name='из ряда:')
     to_row = models.IntegerField(verbose_name='до ряда:')
+    color = models.CharField(verbose_name='цвет', max_length=100)
+    hex_code = models.CharField(verbose_name='hex код цвета',  max_length=100)
 
     def create_tickets(self):
         hall = Hall.objects.get(id=self.seance.repertoire.performance_hall.id)
