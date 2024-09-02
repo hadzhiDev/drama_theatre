@@ -11,8 +11,8 @@ class TicketForSaleStackedInline(admin.StackedInline):
 
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'email', 'phone', 'total_price',)
+    list_display = ('id', 'name', 'email', 'total_price',)
     list_display_links = ('id', 'name',)
-    search_fields = ('id', 'name', 'email', 'phone', 'address', )
+    search_fields = ('id', 'name', 'email', 'address', )
     readonly_fields = ('total_price', )
     inlines = (TicketForSaleStackedInline,)

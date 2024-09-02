@@ -6,13 +6,13 @@ from utils.models import TimeStampAbstractModel
 
 
 class Cart(TimeStampAbstractModel):
-    MAN = 'man'
-    WOMEN = 'women'
-
-    SEX = (
-        (MAN, 'Мужчина'),
-        (WOMEN, 'Женщина')
-    )
+    # MAN = 'man'
+    # WOMEN = 'women'
+    #
+    # SEX = (
+    #     (MAN, 'Мужчина'),
+    #     (WOMEN, 'Женщина')
+    # )
 
     class Meta:
         verbose_name = 'корзина'
@@ -20,9 +20,9 @@ class Cart(TimeStampAbstractModel):
 
     name = models.CharField('имя и фамилия', max_length=140)
     email = models.EmailField('электронная почта')
-    phone = PhoneNumberField('номер телефона')
-    sex = models.CharField(max_length=100, choices=SEX, verbose_name='пол')
-    date_of_birth = models.DateField(verbose_name='дата рождения')
+    # phone = PhoneNumberField('номер телефона')
+    # sex = models.CharField(max_length=100, choices=SEX, verbose_name='пол')
+    # date_of_birth = models.DateField(verbose_name='дата рождения')
     user = models.ForeignKey('account.User', models.CASCADE, 'carts', verbose_name='пользователь',
                              null=True, blank=True)
 

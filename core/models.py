@@ -153,17 +153,45 @@ class PerformanceSeance(TimeStampAbstractModel):
 
 
 class TicketType(models.Model):
+    BLUE = ('blue', 'синий')
+    ORANGE = ('orange', 'оранжевый')
+    RED = ('red', 'красный')
+    PURPLE = ('purple', 'фиолетовый')
+    LIGHT_BLUE = ('light_blue', 'голубой')
+    PINK = ('pink', 'розовый')
+    TURQUOISE = ('turquoise', 'бирюзовый')
+
+    COLORS = (
+        BLUE,
+        ORANGE,
+        RED,
+        PURPLE,
+        LIGHT_BLUE,
+        PINK,
+        TURQUOISE,
+    )
+
     class Meta:
         verbose_name = 'тип билета'
         verbose_name_plural = 'типы билетов'
 
-    seance = models.ForeignKey('core.PerformanceSeance', models.CASCADE, 'ticket_types',
+    seance = models.ForeignKey('core.PerformanceSeance', on_delete=models.CASCADE, related_name='ticket_types',
                                verbose_name='сеанс')
     price = models.IntegerField(verbose_name='цена')
     from_row = models.IntegerField(verbose_name='из ряда:')
     to_row = models.IntegerField(verbose_name='до ряда:')
-    color = models.CharField(verbose_name='цвет', max_length=100)
-    hex_code = models.CharField(verbose_name='hex код цвета',  max_length=100)
+    color = models.CharField(verbose_name='цвет', choices=COLORS, max_length=10)
+    hex_code = models.CharField(verbose_name='hex код цвета', max_length=7, blank=True)
+
+    COLOR_TO_HEX = {
+        'blue': '0053B5',
+        'orange': 'DE6B00',
+        'red': 'D30000',
+        'purple': '95007D',
+        'light_blue': '00B2FF',
+        'pink': 'FF00A8',
+        'turquoise': '00FFD1',
+    }
 
     def create_tickets(self):
         hall = Hall.objects.get(id=self.seance.repertoire.performance_hall.id)
@@ -175,6 +203,8 @@ class TicketType(models.Model):
                                                type=self, repertoire_name=self.seance.repertoire.name)
 
     def save(self, *args, **kwargs):
+        # Automatically set hex_code based on the selected color
+        self.hex_code = self.COLOR_TO_HEX.get(self.color, '')
         super().save(*args, **kwargs)
         # After saving the HallScheme, create seats based on rows length
         self.create_tickets()
