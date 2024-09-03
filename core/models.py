@@ -196,9 +196,6 @@ class TicketType(models.Model):
 
     def create_tickets(self):
         try:
-            existing_seat_numbers = self.tickets.values_list('seat_number', flat=True)
-            print(existing_seat_numbers)
-
             hall = Hall.objects.get(id=self.seance.repertoire.performance_hall.id)
 
             row_numbers = range(self.from_row, self.to_row + 1)
@@ -215,9 +212,9 @@ class TicketType(models.Model):
 
                 for seat in seats:
                     if Ticket.objects.filter(
-                            seat_number=seat.seat_number,
-                            row_number=row.number,
-                            type=self
+                        seat_number=seat.seat_number,
+                        row_number=row.number,
+                        type=self
                     ).exists():
                         continue
 
@@ -247,7 +244,7 @@ class Ticket(models.Model):
     class Meta:
         verbose_name = 'билет'
         verbose_name_plural = 'билеты'
-        unique_together = (('type', 'seat_number'),)
+        unique_together = (('type', 'row_number', 'seat_number'),)
 
     repertoire_name = models.CharField(max_length=300, verbose_name='название репертуара')
     is_sold = models.BooleanField(default=False, verbose_name='продано?')
