@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ObjectDoesNotExist
 
 from utils.models import TimeStampAbstractModel
 
@@ -194,19 +195,35 @@ class TicketType(models.Model):
     }
 
     def create_tickets(self):
-        hall = Hall.objects.get(id=self.seance.repertoire.performance_hall.id)
-        row_list = HallRow.objects.filter(number__in=[self.from_row, self.to_row], hall_id=hall.id)
-        for row in row_list:
-            seats = Seat.objects.filter(row_id=row.id)
-            for seat in seats:
-                ticket = Ticket.objects.create(seat_number=seat.seat_number, row_number=row.number,
-                                               type=self, repertoire_name=self.seance.repertoire.name)
+        try:
+            hall = Hall.objects.get(id=self.seance.repertoire.performance_hall.id)
+
+            row_numbers = range(self.from_row, self.to_row + 1)
+            rows = HallRow.objects.filter(number__in=row_numbers, hall_id=hall.id)
+            if not rows.exists():
+                raise ValueError(
+                    f"No rows found for the given range {self.from_row} to {self.to_row} in hall {hall.id}")
+
+            for row in rows:
+                seats = Seat.objects.filter(row_id=row.id)
+                if not seats.exists():
+                    raise ValueError(f"No seats found for row {row.number} in hall {hall.id}")
+
+                for seat in seats:
+                    Ticket.objects.create(
+                        seat_number=seat.seat_number,
+                        row_number=row.number,
+                        type=self,
+                        repertoire_name=self.seance.repertoire.name
+                    )
+        except ObjectDoesNotExist as e:
+            raise ValueError(f"Error in creating tickets: {str(e)}")
+        except Exception as e:
+            raise ValueError(f"An unexpected error occurred: {str(e)}")
 
     def save(self, *args, **kwargs):
-        # Automatically set hex_code based on the selected color
         self.hex_code = self.COLOR_TO_HEX.get(self.color, '')
         super().save(*args, **kwargs)
-        # After saving the HallScheme, create seats based on rows length
         self.create_tickets()
 
     def __str__(self):
