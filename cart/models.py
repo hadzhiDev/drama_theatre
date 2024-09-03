@@ -41,7 +41,7 @@ class TicketForSale(models.Model):
         verbose_name_plural = 'билеты на продажу'
 
     cart = models.ForeignKey('cart.Cart', models.CASCADE, 'tickets', verbose_name='корзина')
-    ticket = models.ForeignKey('core.Ticket', models.PROTECT, verbose_name='билет')
+    ticket = models.ForeignKey('core.Ticket', models.CASCADE, verbose_name='билет')
     price = models.DecimalField('цена', max_digits=10, decimal_places=2, default=0.0)
 
     def __str__(self):
