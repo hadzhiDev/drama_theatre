@@ -103,6 +103,7 @@ class RepertoireAdmin(NestedModelAdmin):
     list_display_links = ('id', 'name', 'duration')
     search_fields = ('id', 'name', 'created_at')
     readonly_fields = ('created_at', 'updated_at', )
+    filter_horizontal = ('genres', 'actors')
     inlines = [PerformanceSeanceStackedInline,]
 
     @admin.display(description='фотография')
