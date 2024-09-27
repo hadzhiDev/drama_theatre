@@ -194,12 +194,32 @@ class TicketType(models.Model):
         'turquoise': '00FFD1',
     }
 
+    # def delete_invalid_tickets(self):
+    #     tickets = self.tickets.all()
+    #
+    #     for ticket in tickets:
+    #         try:
+    #             # Check if the corresponding HallRow exists
+    #             HallRow.objects.get(number=ticket.row_number)
+    #         except HallRow.DoesNotExist:
+    #             # If HallRow does not exist, delete the ticket
+    #             print(f"Deleting ticket with row_number {ticket.row_number}")
+    #             ticket.delete()
+
     def create_tickets(self):
         try:
             hall = Hall.objects.get(id=self.seance.repertoire.performance_hall.id)
 
             row_numbers = range(self.from_row, self.to_row + 1)
             rows = HallRow.objects.filter(number__in=row_numbers, hall_id=hall.id)
+
+            for ticket in self.tickets.all():
+                try:
+                    HallRow.objects.get(number=ticket.row_number)
+                except HallRow.DoesNotExist:
+                    print(f"Deleting ticket with row_number {ticket.row_number}")
+                    ticket.delete()
+
             if not rows.exists():
                 raise ValueError(
                     f"No rows found for the given range {self.from_row} to {self.to_row} in hall {hall.id}")
