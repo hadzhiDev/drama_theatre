@@ -260,7 +260,6 @@ class TicketType(models.Model):
 
 
 class Ticket(models.Model):
-
     class Meta:
         verbose_name = 'билет'
         verbose_name_plural = 'билеты'
@@ -272,6 +271,7 @@ class Ticket(models.Model):
     row_number = models.IntegerField(verbose_name='номер ряда')
     type = models.ForeignKey('core.TicketType', on_delete=models.CASCADE, related_name='tickets',
                              verbose_name='тип билета')
+    seat_id = models.ForeignKey('core.Seat', on_delete=models.PROTECT, related_name='tickets')
 
     @property
     def price(self):

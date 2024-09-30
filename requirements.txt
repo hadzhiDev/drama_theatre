@@ -19,6 +19,7 @@ django-rest-framework==0.1.0
 django-rest-registration==0.8.3
 django-super-inlines==0.2.2
 djangorestframework==3.14.0
+drf-writable-nested==0.7.0
 drf-yasg==1.21.7
 google-auth==2.28.2
 idna==3.6
